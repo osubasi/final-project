@@ -8,9 +8,22 @@ def emotion_detector(text_to_analyse):
 
     response = requests.post(url, json=myinput, headers=headers)
     formatted_response = json.loads(response.text)
+
+    emotions = formatted_response['emotionPredictions']
+    #print(emotions[0]['emotion'])
+    dominant = ''
+    score = 0
+    mydict = {}
+    for key, value in emotions[0]['emotion'].items():
+        mydict[key] = value
+        if(value > score):
+            score = value
+            dominant = key
+    
+    mydict['dominant_emotion'] = dominant
     
     if response.status_code == 200:
-        return formatted_response
+        return mydict
 
     elif response.status_code == 500:
         return -1
